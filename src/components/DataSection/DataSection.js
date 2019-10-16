@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './DataSection.scss';
 import { getLocation } from '../../commons/helpers';
-import Card from '../Card/Card'
+import Card from '../Card/Card';
+import { Tabs } from '../../statics/Statics';
 
 function DataSection ({activeTab}) {
     const [data, setData] = useState([]);
@@ -41,9 +42,10 @@ function DataSection ({activeTab}) {
                     <img src="load.gif" alt="Loader Gif"/>
                 </div>}
             {!loading && <div className="DataSection__Wrapper">
-                {   data.map((res, index) => (
+                {   data.length > 0 && data.map((res, index) => (
                     <Card key={index} res={res}/>))
                 }
+                {data.length == 0 && <h4>No nearby {Tabs.find(tab => tab.label === activeTab).name} found.</h4>}
             </div>}
         </div>
     )
