@@ -1,5 +1,5 @@
 export const getLocation = () => {
-    const geolocation = navigator.geolocation;
+    const { geolocation } = navigator;
     
     return new Promise((resolve, reject) => {
       if (!geolocation) {
@@ -9,7 +9,7 @@ export const getLocation = () => {
       geolocation.getCurrentPosition((position) => {
         resolve(position);
       }, () => {
-        reject (console.log('Permission denied'));
+        reject(console.log('Permission denied'));
       });
     });
 };
