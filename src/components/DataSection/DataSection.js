@@ -4,12 +4,23 @@ import { getLocation } from '../../commons/helpers';
 import Card from '../Card/Card';
 import { Tabs } from '../../statics/Statics';
 
-function DataSection ({activeTab}) {
+function DataSection ({activeTab, coords}) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [service, setService] = useState('');
 
-    useEffect(() => getData(), [activeTab])
+    useEffect(() => {
+        if(window.google) {
+            setService(new window.google.maps.places.PlacesService(new window.google.maps.Map(document.getElementById('map'), {zoom: 15})));
+        }
+    }, [])
+
+    useEffect(() => {
+        return function cleanup() {
+            getCachedData()
+        }
+    }, [coords, activeTab])
 
     const callback = (results, status) => {
         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
@@ -19,18 +30,14 @@ function DataSection ({activeTab}) {
         }
         setLoading(false)
     }
-    const getData = () => {
+    const getCachedData = () => {
         setLoading(true)
-        getLocation().then(({ coords: {latitude, longitude} }) => {
-            let map = new window.google.maps.Map(document.getElementById('map'), {zoom: 15});
-            let request = {
-                location: {lat: latitude, lng: longitude},
-                radius: '500',
-                type: [activeTab]
-            };
-            let service = new window.google.maps.places.PlacesService(map);
-            service.nearbySearch(request, callback);
-        });
+        let request = {
+            location: {lat: coords.latitude, lng: coords.longitude},
+            radius: '500',
+            type: [activeTab]
+        };
+        service && service.nearbySearch(request, callback);
     }
     return (
         <div className="DataSection__Container">
