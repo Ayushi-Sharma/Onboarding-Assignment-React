@@ -9,7 +9,7 @@ function Content () {
   
   return (
     <div className="Content__Container">
-      <Sidebar activeTab={activeTab} changeTab={tab => setActiveTab(tab)} />
+      <Sidebar activeTab={activeTab} changeTab={setActiveTab} />
       <DataSection activeTab={activeTab} />
     </div>
   )
