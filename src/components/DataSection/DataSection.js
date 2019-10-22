@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './DataSection.scss';
-import { getLocation } from '../../commons/helpers';
 import Card from '../Card/Card';
 import { Tabs } from '../../statics/Statics';
 
@@ -17,20 +16,6 @@ function DataSection ({activeTab, coords}) {
     }, [])
 
     useEffect(() => {
-        return function cleanup() {
-            getCachedData()
-        }
-    }, [coords, activeTab])
-
-    const callback = (results, status) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-            setData(results)
-        }   else {
-            setError( `status ${status}: Something went wrong. Please reload the page!`)
-        }
-        setLoading(false)
-    }
-    const getCachedData = () => {
         setLoading(true)
         let request = {
             location: {lat: coords.latitude, lng: coords.longitude},
@@ -38,7 +23,19 @@ function DataSection ({activeTab, coords}) {
             type: [activeTab]
         };
         service && service.nearbySearch(request, callback);
+        return function cleanup() {}
+    }, [coords, activeTab, service])
+
+    const callback = (results, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+            setData(results)
+            setError('')
+        }   else {
+            setError( `status ${status}: Something went wrong. Please reload the page!`)
+        }
+        setLoading(false)
     }
+    
     return (
         <div className="DataSection__Container">
             <div id="map"></div>
@@ -51,7 +48,7 @@ function DataSection ({activeTab, coords}) {
                 {   data.length > 0 && data.map((res, index) => (
                     <Card key={index} res={res}/>))
                 }
-                {data.length == 0 && <h4>No nearby {Tabs.find(tab => tab.label === activeTab).name} found.</h4>}
+                {data.length === 0 && <h4>No nearby {Tabs.find(tab => tab.label === activeTab).name} found.</h4>}
             </div>}
             {}
         </div>
