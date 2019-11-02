@@ -1,0 +1,15 @@
+@import '../../commons/colors.scss';
+
+.Card__Wrapper {
+    border: 1px solid $border-primary;
+    border-radius: 4px;
+    width: 20vw;
+    margin: 20px;
+    padding: 15px;
+    box-shadow: 0 8px 5px 0 rgba(0,0,0,0.2);
+    background: linear-gradient(-45deg, $purple-light, transparent);
+
+    .Card__Title {
+        font-weight: 700;
+    }
+}

@@ -1,26 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import Header from './components/Header/Header'
+import Content from './components/Content/Content'
+import { getLocation } from './commons/helpers'
 
-function App() {
+
+function App () {
+  const [coordinates, setCoordinates] = useState({latitude: 0, longitude: 0})
+
+  getLocation().then(({ coords: {latitude, longitude} }) => setCoordinates({latitude, longitude})).catch(err => console.log(err));
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header coords={coordinates}/>
+      <Content coords={coordinates}/>
     </div>
-  );
+   )
 }
 
 export default App;
+
+  
